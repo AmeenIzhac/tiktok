@@ -6,10 +6,10 @@ import { flashcardsData } from '../data/flashcards';
 
 interface ReelsFeedProps {
   reels: Reel[];
-  onWordComplete: () => void;
+  difficulty: 'easy' | 'medium' | 'hard';
 }
 
-const ReelsFeed: React.FC<ReelsFeedProps> = ({ reels, onWordComplete }) => {
+const ReelsFeed: React.FC<ReelsFeedProps> = ({ reels, difficulty }) => {
   const [activeIndex, setActiveIndex] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -58,7 +58,6 @@ const ReelsFeed: React.FC<ReelsFeedProps> = ({ reels, onWordComplete }) => {
               <FlashcardRow 
                 cards={flashcardsData[index]} 
                 isActive={itemIndex + 1 === activeIndex}
-                onWordComplete={onWordComplete}
               />
             )}
           </React.Fragment>

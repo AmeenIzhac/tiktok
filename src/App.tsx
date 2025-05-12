@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import ReelsFeed from './components/ReelsFeed';
-import Sidebar from './components/Sidebar';
-import { FileText } from 'lucide-react';
+import DifficultySelect from './components/DifficultySelect';
+import PodcastPractice from './components/PodcastPractice';
 import { fetchReels } from './data/reels';
 import { Reel } from './types';
+import posthog from 'posthog-js'
+
+posthog.init('phc_1kFnhVfWcktIwYNP2vB5mn0CB4eBgUCo0CNeIRRqw5t', {
+  api_host: 'https://app.posthog.com', 
+  capture_pageview: true,
+  disable_session_recording: false 
+})
+
+type Tab = 'browse' | 'podcast';
 
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [completedWords, setCompletedWords] = useState(0);
   const [reels, setReels] = useState<Reel[]>([]);
   const [loading, setLoading] = useState(true);
+  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard' | null>(null);
+  const [activeTab, setActiveTab] = useState<Tab>('browse');
 
   useEffect(() => {
     const loadReels = async () => {
@@ -29,31 +38,48 @@ function App() {
     );
   }
 
+  if (!difficulty) {
+    return <DifficultySelect onSelect={setDifficulty} />;
+  }
+
   return (
     <div className="h-screen w-full bg-white text-black flex flex-col items-center">
-      <main className="flex-1 overflow-hidden w-full max-w-[800px]">
-        <ReelsFeed 
-          reels={reels} 
-          onWordComplete={() => setCompletedWords(prev => prev + 1)}
-        />
-      </main>
-      
-      <div className="fixed top-4 right-4 bg-white text-black px-4 py-2 rounded-xl shadow-lg z-20 backdrop-blur-sm border border-black/20">
-        <span className="text-sm font-medium">Words Completed: {completedWords}</span>
+      {/* Tab Navigation */}
+      <div className="w-full max-w-[800px] border-b">
+        <div className="flex">
+          <button
+            onClick={() => setActiveTab('browse')}
+            className={`flex-1 py-4 text-center font-medium transition-colors ${
+              activeTab === 'browse'
+                ? 'text-blue-500 border-b-2 border-blue-500'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Browse
+          </button>
+          <button
+            onClick={() => setActiveTab('podcast')}
+            className={`flex-1 py-4 text-center font-medium transition-colors ${
+              activeTab === 'podcast'
+                ? 'text-blue-500 border-b-2 border-blue-500'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Podcast Practice
+          </button>
+        </div>
       </div>
 
-      <button
-        onClick={() => setIsSidebarOpen(true)}
-        className="fixed top-4 left-4 bg-white text-black px-4 py-2 rounded-xl shadow-lg hover:bg-gray-50 transition-all flex items-center gap-2 z-20 backdrop-blur-sm border border-black/20"
-      >
-        <FileText className="h-5 w-5" />
-        <span className="text-sm font-medium">Paste your vocab list</span>
-      </button>
-
-      <Sidebar 
-        isOpen={isSidebarOpen} 
-        onClose={() => setIsSidebarOpen(false)} 
-      />
+      <main className="flex-1 overflow-hidden w-full max-w-[800px]">
+        {activeTab === 'browse' ? (
+          <ReelsFeed 
+            reels={reels} 
+            difficulty={difficulty}
+          />
+        ) : (
+          <PodcastPractice />
+        )}
+      </main>
     </div>
   );
 }

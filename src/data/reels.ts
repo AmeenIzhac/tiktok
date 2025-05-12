@@ -32,7 +32,7 @@ export const fetchReels = async (): Promise<Reel[]> => {
         user: {
           id: 'default',
           username: 'Language Learner',
-          profileImage: 'https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg'
+          profileImage: 'https://media.hswstatic.com/eyJidWNrZXQiOiJjb250ZW50Lmhzd3N0YXRpYy5jb20iLCJrZXkiOiJnaWZcL3BsYXlcLzBiN2Y0ZTliLWY1OWMtNDAyNC05ZjA2LWIzZGMxMjg1MGFiNy0xOTIwLTEwODAuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo4Mjh9fX0='
         },
         caption: file.name.replace(/\.[^/.]+$/, ''), // Remove file extension
         likes: 0,

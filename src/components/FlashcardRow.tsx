@@ -5,16 +5,15 @@ import Flashcard from './Flashcard';
 interface FlashcardRowProps {
   cards: FlashcardType[];
   isActive: boolean;
-  onWordComplete: () => void;
 }
 
-const FlashcardRow: React.FC<FlashcardRowProps> = ({ cards, isActive, onWordComplete }) => {
+const FlashcardRow: React.FC<FlashcardRowProps> = ({ cards, isActive }) => {
   return (
     <div className="min-h-[calc(100vh-8rem)] w-full snap-center snap-always my-4 flex items-center">
       <div className="grid grid-cols-3 gap-3 w-full px-2">
         {cards.map((card) => (
           <div key={card.id}>
-            <Flashcard card={card} onComplete={onWordComplete} />
+            <Flashcard card={card} onComplete={() => {}} />
           </div>
         ))}
         {/* Add placeholder cards if less than 3 cards */}
