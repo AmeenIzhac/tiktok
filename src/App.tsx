@@ -2,23 +2,49 @@ import React, { useState, useEffect } from 'react';
 import ReelsFeed from './components/ReelsFeed';
 import DifficultySelect from './components/DifficultySelect';
 import PodcastPractice from './components/PodcastPractice';
+import JustOneMinute from './components/JustOneMinute';
 import { fetchReels } from './data/reels';
 import { Reel } from './types';
 import posthog from 'posthog-js'
+// import posthog from './posthog';
 
-posthog.init('phc_1kFnhVfWcktIwYNP2vB5mn0CB4eBgUCo0CNeIRRqw5t', {
-  api_host: 'https://app.posthog.com', 
-  capture_pageview: true,
-  disable_session_recording: false 
-})
+// import posthog from 'posthog-js'
 
-type Tab = 'browse' | 'podcast';
+// posthog.init(import.meta.env.VITE_POSTHOG_API_KEY, {
+//   api_host: 'https://app.posthog.com', 
+//   capture_pageview: true,
+//   disable_session_recording: false 
+// })
+
+posthog.init(import.meta.env.VITE_POSTHOG_API_KEY, {
+    api_host: 'https://us.i.posthog.com',
+    loaded: (posthog) => {
+      if (import.meta.env.DEV) posthog.debug();
+    },
+    capture_pageview: true, // Tracks pageviews automatically
+    capture_performance: true, // Tracks performance
+    disable_session_recording: false, // Enables session recording
+    session_recording: {
+      maskAllInputs: false,
+      maskInputOptions: {
+          password: true
+      }
+    }
+  });
+
+// export default posthog;
+
+type Tab = 'browse' | 'podcast' | 'justOneMinute';
 
 function App() {
   const [reels, setReels] = useState<Reel[]>([]);
   const [loading, setLoading] = useState(true);
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard' | null>(null);
   const [activeTab, setActiveTab] = useState<Tab>('browse');
+
+  // useEffect(() => {
+  //   posthog.capture('pageview');
+  // }, []);
 
   useEffect(() => {
     const loadReels = async () => {
@@ -67,6 +93,16 @@ function App() {
           >
             Podcast Practice
           </button>
+          <button
+            onClick={() => setActiveTab('justOneMinute')}
+            className={`flex-1 py-4 text-center font-medium transition-colors ${
+              activeTab === 'justOneMinute'
+                ? 'text-blue-500 border-b-2 border-blue-500'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Just One Minute!
+          </button>
         </div>
       </div>
 
@@ -76,8 +112,10 @@ function App() {
             reels={reels} 
             difficulty={difficulty}
           />
-        ) : (
+        ) : activeTab === 'podcast' ? (
           <PodcastPractice />
+        ) : (
+          <JustOneMinute />
         )}
       </main>
     </div>
