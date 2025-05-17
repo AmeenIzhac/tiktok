@@ -38,7 +38,7 @@ const PodcastPractice: React.FC = () => {
     <div className="h-screen w-full flex flex-col items-center justify-center bg-white p-4">
       <h1 className="text-3xl font-bold mb-4">Podcast Practice</h1>
       <p className="text-gray-600 text-center max-w-md mb-8">
-        Coming soon! This section will help you practice your language skills through engaging podcast content.
+        This section will help you practice your language skills through engaging podcast content.
       </p>
 
       <div className="flex gap-4">

@@ -3,6 +3,7 @@ import ReelsFeed from './components/ReelsFeed';
 import DifficultySelect from './components/DifficultySelect';
 import PodcastPractice from './components/PodcastPractice';
 import JustOneMinute from './components/JustOneMinute';
+import Progress from './components/Progress';
 import { fetchReels } from './data/reels';
 import { Reel } from './types';
 import posthog from 'posthog-js'
@@ -34,7 +35,7 @@ posthog.init(import.meta.env.VITE_POSTHOG_API_KEY, {
 
 // export default posthog;
 
-type Tab = 'browse' | 'podcast' | 'justOneMinute';
+type Tab = 'browse' | 'podcast' | 'justOneMinute' | 'progress';
 
 function App() {
   const [reels, setReels] = useState<Reel[]>([]);
@@ -103,6 +104,16 @@ function App() {
           >
             Just One Minute!
           </button>
+          <button
+            onClick={() => setActiveTab('progress')}
+            className={`flex-1 py-4 text-center font-medium transition-colors ${
+              activeTab === 'progress'
+                ? 'text-blue-500 border-b-2 border-blue-500'
+                : 'text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            Progress
+          </button>
         </div>
       </div>
 
@@ -114,8 +125,10 @@ function App() {
           />
         ) : activeTab === 'podcast' ? (
           <PodcastPractice />
-        ) : (
+        ) : activeTab === 'justOneMinute' ? (
           <JustOneMinute />
+        ) : (
+          <Progress />
         )}
       </main>
     </div>
